@@ -1,5 +1,6 @@
-package com.vk.itmo.floppy.bot;
+package com.vk.itmo.floppy.api;
 
+import com.vk.itmo.floppy.service.PlayerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,13 +17,15 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 @Slf4j
 @Component
-public class ExampleBot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
+public class TelegramApi implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
+    private final PlayerService playerService;
     private final String token;
 
-    public ExampleBot(@Value("${floppy.bot.token}") String token) {
+    public TelegramApi(@Value("${floppy.bot.token.telegram}") String token, PlayerService playerService) {
         this.token = token;
         this.telegramClient = new OkHttpTelegramClient(token);
+        this.playerService = playerService;
     }
 
     @Override
@@ -40,6 +43,11 @@ public class ExampleBot implements SpringLongPollingBot, LongPollingSingleThread
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
+            long userId = update.getMessage().getFrom().getId();
+
+            if (!playerService.isUserExists(userId)) {
+                playerService.addUser(userId);
+            }
 
             SendMessage message = SendMessage
                     .builder()

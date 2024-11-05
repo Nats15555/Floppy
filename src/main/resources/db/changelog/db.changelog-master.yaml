@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: setup-1
+      author: bromles
+      changes:
+        - createTable:
+            tableName: player
+            columns:
+              - column:
+                  name: ID
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: TG_ID
+                  type: bigint
+              - column:
+                  name: CLICKS_SINCE_JACKPOT
+                  type: bigint
+              - column:
+                  name: CLICKS_SINCE_WINNING
+                  type: bigint
+              - column:
+                  name: CLICKS_SINCE_GIVEAWAY
+                  type: bigint
+              - column:
+                  name: BALANCE
+                  type: numeric
+              - column:
+                  name: LAST_GIVEAWAY
+                  type: timestamp

@@ -32,6 +32,8 @@ dependencies {
     implementation("org.telegram:telegrambots-springboot-longpolling-starter:$tgBotApiVersion")
     implementation("org.telegram:telegrambots-client:$tgBotApiVersion")
 
+    implementation("org.liquibase:liquibase-core")
+
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
