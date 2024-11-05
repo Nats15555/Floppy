@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: floppy
+
+floppy:
+  bot:
+    token: ${FLOPPY_BOT_TOKEN}
