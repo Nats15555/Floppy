@@ -1,4 +1,4 @@
-package com.vk.itmo.floppy.api.commands;
+package com.vk.itmo.floppy.api.command;
 
 import com.vk.itmo.floppy.service.PlayerService;
 import lombok.RequiredArgsConstructor;

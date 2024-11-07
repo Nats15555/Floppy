@@ -1,4 +1,4 @@
-package com.vk.itmo.floppy.api.commands;
+package com.vk.itmo.floppy.api.command;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -6,10 +6,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 
 import java.util.function.Consumer;
 
-@Component(BanditCommand.name)
-public class BanditCommand extends Command {
-    public final static String name = "Бандит";
-    public final static String description = "Начать играть в игру Бандит";
+@Component(RouletteCommand.name)
+public class RouletteCommand extends Command {
+    public final static String name = "Рулетка";
+    public final static String description = "Начать играть в игру Рулетка";
 
     @Override
     public void execute(Long userId,
@@ -18,7 +18,7 @@ public class BanditCommand extends Command {
                         Consumer<SendMessage> sendMessage) {
         var playButton = getPlayGameButton("https://example.com/");
         var message = sendMessageBuilder
-                .text("Игра Однорукий Бандит")
+                .text("Игра Рулетка")
                 .replyMarkup(playButton)
                 .build();
         sendMessage.accept(message);

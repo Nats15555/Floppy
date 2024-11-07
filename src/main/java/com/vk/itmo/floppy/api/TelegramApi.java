@@ -1,6 +1,6 @@
 package com.vk.itmo.floppy.api;
 
-import com.vk.itmo.floppy.api.commands.*;
+import com.vk.itmo.floppy.api.command.*;
 import com.vk.itmo.floppy.service.PlayerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

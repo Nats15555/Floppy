@@ -1,4 +1,4 @@
-package com.vk.itmo.floppy.api.commands;
+package com.vk.itmo.floppy.api.command;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;

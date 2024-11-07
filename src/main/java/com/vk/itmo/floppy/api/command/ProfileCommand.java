@@ -1,4 +1,4 @@
-package com.vk.itmo.floppy.api.commands;
+package com.vk.itmo.floppy.api.command;
 
 import com.vk.itmo.floppy.service.PlayerService;
 import lombok.RequiredArgsConstructor;
@@ -8,11 +8,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 
 import java.util.function.Consumer;
 
-@Component(StartCommand.name)
+@Component(ProfileCommand.name)
 @RequiredArgsConstructor
-public class StartCommand extends Command {
-    public final static String name = "/start";
-    public final static String description = "Запустить бота";
+public class ProfileCommand extends Command {
+    public final static String name = "Профиль";
+    public final static String description = "Посмотреть профиль";
+
     private final PlayerService playerService;
 
     @Override
@@ -20,18 +21,16 @@ public class StartCommand extends Command {
                         SendMessage.SendMessageBuilder sendMessageBuilder,
                         ReplyKeyboardMarkup keyboardMarkup,
                         Consumer<SendMessage> sendMessage) {
-        registerUserIfNotExist(userId);
+        var player = playerService.getUser(userId);
         var message = sendMessageBuilder
                 .replyMarkup(keyboardMarkup)
-                .text("Привет\\. Это казино\\-бот Floppy\\. Со мной ты сможешь сыграть в разные игры\\.")
+                .text("""
+                        *Ваш профиль*
+                        • Telegram ID : %d
+                        • Баланс : ||%s||
+                        """.formatted(player.getTgId(), player.getBalance()))
                 .build();
         sendMessage.accept(message);
-    }
-
-    private void registerUserIfNotExist(Long userId) {
-        if (!playerService.isUserExists(userId)) {
-            playerService.addUser(userId);
-        }
     }
 
     @Override

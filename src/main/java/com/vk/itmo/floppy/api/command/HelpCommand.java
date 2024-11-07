@@ -1,36 +1,43 @@
-package com.vk.itmo.floppy.api.commands;
+package com.vk.itmo.floppy.api.command;
 
-import com.vk.itmo.floppy.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
-@Component(ProfileCommand.name)
+@Component(HelpCommand.name)
 @RequiredArgsConstructor
-public class ProfileCommand extends Command {
-    public final static String name = "Профиль";
-    public final static String description = "Посмотреть профиль";
-
-    private final PlayerService playerService;
+public class HelpCommand extends Command {
+    public final static String name = "/help";
+    public final static String description = "Получить список доступных команд";
+    private final List<Command> commands;
 
     @Override
     public void execute(Long userId,
                         SendMessage.SendMessageBuilder sendMessageBuilder,
                         ReplyKeyboardMarkup keyboardMarkup,
                         Consumer<SendMessage> sendMessage) {
-        var player = playerService.getUser(userId);
+        var text = getCommands();
         var message = sendMessageBuilder
                 .replyMarkup(keyboardMarkup)
-                .text("""
-                        *Ваш профиль*
-                        • Telegram ID : %d
-                        • Баланс : ||%s||
-                        """.formatted(player.getTgId(), player.getBalance()))
+                .text(text)
                 .build();
         sendMessage.accept(message);
+    }
+
+    private String getCommands() {
+        commands.add(this);
+        return "*Доступные команды:*\n" + commands.stream()
+                .map(this::getPrettyLine)
+                .collect(Collectors.joining("\n\n"));
+    }
+
+    private String getPrettyLine(Command command) {
+        return String.format("• `%s` : %s", command.getName(), command.getDescription());
     }
 
     @Override

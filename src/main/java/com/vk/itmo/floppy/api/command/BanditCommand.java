@@ -1,23 +1,25 @@
-package com.vk.itmo.floppy.api.commands;
+package com.vk.itmo.floppy.api.command;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.util.function.Consumer;
 
-public class WrongCommand extends Command {
-    public final static String name = StringUtils.EMPTY;
-    public final static String description = StringUtils.EMPTY;
+@Component(BanditCommand.name)
+public class BanditCommand extends Command {
+    public final static String name = "Бандит";
+    public final static String description = "Начать играть в игру Бандит";
 
     @Override
     public void execute(Long userId,
                         SendMessage.SendMessageBuilder sendMessageBuilder,
                         ReplyKeyboardMarkup keyboardMarkup,
                         Consumer<SendMessage> sendMessage) {
+        var playButton = getPlayGameButton("https://example.com/");
         var message = sendMessageBuilder
-                .replyMarkup(keyboardMarkup)
-                .text("Такой команды нет. Попробуй еще")
+                .text("Игра Однорукий Бандит")
+                .replyMarkup(playButton)
                 .build();
         sendMessage.accept(message);
     }
