@@ -16,10 +16,6 @@ import java.util.function.Consumer;
 public class BanditCommand implements Command {
     public final static String name = "Однорукий бандит";
     public final static String description = "Начать играть в игру Бандит";
-    private final double additionalWinProbability = 0.01;
-    private final double additionalJackpotProbability = 0.001;
-    private final double playerWinProbability = 0.45;
-    private final double playerJackpotProbability = 0.01;
 
 
     private final PlayerService playerService;
@@ -57,22 +53,22 @@ public class BanditCommand implements Command {
         BanditExceedType exceed = calculate(player);
 
         switch (exceed) {
-            case JACKPOT:
+            case JACKPOT -> {
                 result[0] = result[1] = result[2] = 7;
                 playerService.setBalance(tgUserId, player.getBalance() + betAmount * 2);
-                break;
-            case WIN:
+            }
+            case WIN -> {
                 Random r = new Random();
                 result[0] = result[1] = result[2] = r.nextInt(0, 6);
                 playerService.setBalance(tgUserId, player.getBalance() + betAmount);
-                break;
-            case LOSE:
+            }
+            case LOSE -> {
                 Random r1 = new Random();
                 result[0] = r1.nextInt(0, 6);
                 result[1] = r1.nextInt(0, 6);
                 result[2] = r1.nextInt(0, 6);
                 playerService.setBalance(tgUserId, player.getBalance() - betAmount);
-                break;
+            }
         }
 
         return result;
@@ -86,8 +82,14 @@ public class BanditCommand implements Command {
         double x = random.nextDouble(0, 1);
         double y = random.nextDouble(0, 0.5);
 
+        double additionalWinProbability = 0.01;
+        double playerWinProbability = 0.45;
+
         int win = CharacteristicFunction(playerWinProbability, 1.0,
                 (x + CharacteristicFunction(4, 100, winAttempt) * winAttempt * additionalWinProbability));
+
+        double additionalJackpotProbability = 0.001;
+        double playerJackpotProbability = 0.01;
 
         int jackpot = CharacteristicFunction(-100.0, playerJackpotProbability,
                 (y - CharacteristicFunction(10, 1000, jackpotAttempt) * jackpotAttempt * additionalJackpotProbability));
@@ -107,6 +109,7 @@ public class BanditCommand implements Command {
         if (lower_bound <= value && value <= upper_bound) {
             return 1;
         }
+
         return 0;
     }
 
