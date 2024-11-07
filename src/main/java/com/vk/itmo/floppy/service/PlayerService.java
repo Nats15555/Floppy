@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -15,35 +14,35 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class PlayerService {
-    private final PlayerRepository playerRepository;
     private final static int GIVEAWAY_DURATION = 7200;
     private final static int GIVEAWAY_PRICE = 100;
+    private final PlayerRepository playerRepository;
 
-    public boolean isUserExists(long userId) {
-        return playerRepository.existsByTgId(userId);
+    public boolean isUserExists(long tgUserId) {
+        return playerRepository.existsByTgId(tgUserId);
     }
 
-    public void addUser(long userId) {
+    public void addUser(long tgUserId) {
         Player player = Player.builder()
-                .tgId(userId)
+                .tgId(tgUserId)
                 .clicksSinceGiveaway(0)
                 .clicksSinceJackpot(0)
                 .clicksSinceWinning(0)
-                .balance(new BigDecimal(0))
+                .balance(0)
                 .build();
 
-        log.info("Adding user {}", userId);
+        log.info("Adding user {}", tgUserId);
 
         playerRepository.save(player);
     }
 
-    public Player getUser(long userId) {
-        return playerRepository.findByTgId(userId)
+    public Player getUser(long tgUserId) {
+        return playerRepository.findByTgId(tgUserId)
                 .orElseThrow();
     }
 
-    public boolean giveaway(long userId) {
-        var player = getUser(userId);
+    public boolean giveaway(long tgUserId) {
+        var player = getUser(tgUserId);
         var lastGiveawayTime = player.getLastGiveaway();
         if (Objects.isNull(lastGiveawayTime)) {
             takeGiveaway(player);
@@ -59,7 +58,7 @@ public class PlayerService {
 
     private void takeGiveaway(Player player) {
         player.setLastGiveaway(LocalDateTime.now());
-        player.setBalance(player.getBalance().add(new BigDecimal(GIVEAWAY_PRICE)));
+        player.setBalance(player.getBalance() + GIVEAWAY_PRICE);
         playerRepository.save(player);
     }
 }

@@ -17,11 +17,11 @@ public class ProfileCommand implements Command {
     private final PlayerService playerService;
 
     @Override
-    public void execute(Long userId,
+    public void execute(Long tgUserId,
                         SendMessage.SendMessageBuilder sendMessageBuilder,
                         ReplyKeyboardMarkup keyboardMarkup,
                         Consumer<SendMessage> sendMessage) {
-        var player = playerService.getUser(userId);
+        var player = playerService.getUser(tgUserId);
         var message = sendMessageBuilder
                 .replyMarkup(keyboardMarkup)
                 .text("""

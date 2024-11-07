@@ -11,7 +11,7 @@ public class WrongCommand implements Command {
     public final static String description = StringUtils.EMPTY;
 
     @Override
-    public void execute(Long userId,
+    public void execute(Long tgUserId,
                         SendMessage.SendMessageBuilder sendMessageBuilder,
                         ReplyKeyboardMarkup keyboardMarkup,
                         Consumer<SendMessage> sendMessage) {

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public interface Command {
-    void execute(Long userId,
+    void execute(Long tgUserId,
                  SendMessage.SendMessageBuilder sendMessageBuilder,
                  ReplyKeyboardMarkup keyboardMarkup,
                  Consumer<SendMessage> sendMessage);

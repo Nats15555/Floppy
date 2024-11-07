@@ -19,24 +19,23 @@ public class GetMoneyCommand implements Command {
     private final PlayerService playerService;
 
     @Override
-    public void execute(Long userId,
+    public void execute(Long tgUserId,
                         SendMessage.SendMessageBuilder sendMessageBuilder,
                         ReplyKeyboardMarkup keyboardMarkup,
                         Consumer<SendMessage> sendMessage) {
 
-        var player = playerService.getUser(userId);
+        var player = playerService.getUser(tgUserId);
         var playerInitBalance = player.getBalance();
-        var wasGiveaway = playerService.giveaway(userId);
+        var wasGiveaway = playerService.giveaway(tgUserId);
 
-        var message = sendMessageBuilder
-                .replyMarkup(keyboardMarkup);
+        var message = sendMessageBuilder.replyMarkup(keyboardMarkup);
         if (wasGiveaway) {
-            var playerAfterGiveawayBalance = playerService.getUser(userId).getBalance();
+            var playerAfterGiveawayBalance = playerService.getUser(tgUserId).getBalance();
             message.text("""
                     Поздравляю\\!
                     Вы получили %s монет
                     Теперь ваш баланс: ||%s||
-                    """.formatted(playerAfterGiveawayBalance.subtract(playerInitBalance), playerAfterGiveawayBalance));
+                    """.formatted(playerAfterGiveawayBalance - playerInitBalance, playerAfterGiveawayBalance));
         } else {
             var timeLeft = Duration.between(LocalDateTime.now(), player.getLastGiveaway().plusHours(2)).abs().toSeconds();
             message.text("""

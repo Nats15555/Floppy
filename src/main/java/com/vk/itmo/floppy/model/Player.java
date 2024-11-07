@@ -1,9 +1,11 @@
 package com.vk.itmo.floppy.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -22,6 +24,6 @@ public class Player {
     private long clicksSinceJackpot;
     private long clicksSinceWinning;
     private long clicksSinceGiveaway;
-    private BigDecimal balance;
+    private long balance;
     private LocalDateTime lastGiveaway;
 }

@@ -15,22 +15,28 @@ public class StartCommand implements Command {
     public final static String description = "Запустить бота";
     private final PlayerService playerService;
 
+    private static final String msg = """
+            Привет\\. Это казино\\-бот Floppy\\. Со мной ты сможешь сыграть в разные игры\\.
+            
+            Напиши /help для вывода справки
+            """;
+
     @Override
-    public void execute(Long userId,
+    public void execute(Long tgUserId,
                         SendMessage.SendMessageBuilder sendMessageBuilder,
                         ReplyKeyboardMarkup keyboardMarkup,
                         Consumer<SendMessage> sendMessage) {
-        registerUserIfNotExist(userId);
+        registerUserIfNotExist(tgUserId);
         var message = sendMessageBuilder
                 .replyMarkup(keyboardMarkup)
-                .text("Привет\\. Это казино\\-бот Floppy\\. Со мной ты сможешь сыграть в разные игры\\.")
+                .text(msg)
                 .build();
         sendMessage.accept(message);
     }
 
-    private void registerUserIfNotExist(Long userId) {
-        if (!playerService.isUserExists(userId)) {
-            playerService.addUser(userId);
+    private void registerUserIfNotExist(Long tgUserId) {
+        if (!playerService.isUserExists(tgUserId)) {
+            playerService.addUser(tgUserId);
         }
     }
 

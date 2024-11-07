@@ -17,7 +17,7 @@ public class HelpCommand implements Command {
     private final List<Command> commands;
 
     @Override
-    public void execute(Long userId,
+    public void execute(Long tgUserId,
                         SendMessage.SendMessageBuilder sendMessageBuilder,
                         ReplyKeyboardMarkup keyboardMarkup,
                         Consumer<SendMessage> sendMessage) {
