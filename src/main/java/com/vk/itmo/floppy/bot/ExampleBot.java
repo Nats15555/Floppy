@@ -11,8 +11,15 @@ import org.telegram.telegrambots.longpolling.starter.SpringLongPollingBot;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
+import org.telegram.telegrambots.meta.api.objects.webapp.WebAppInfo;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -37,14 +44,28 @@ public class ExampleBot implements SpringLongPollingBot, LongPollingSingleThread
 
     @Override
     public void consume(Update update) {
+
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
+            WebAppInfo webAppInfo = new WebAppInfo("https://localhost:5173/slots/" + chatId);
+
+            InlineKeyboardButton button = new InlineKeyboardButton("Открыть сайт");
+            button.setWebApp(webAppInfo);
+
+            List<InlineKeyboardRow> rows = new ArrayList<>();
+
+            InlineKeyboardRow row = new InlineKeyboardRow();
+            row.add(button);
+
+            rows.add(row);
+
+            InlineKeyboardMarkup markup = new InlineKeyboardMarkup(rows);
 
             SendMessage message = SendMessage
                     .builder()
                     .chatId(chatId)
-                    .text(messageText)
+                    .text("Нажмите на кнопку, чтобы открыть сайт!")
+                    .replyMarkup(markup)
                     .build();
 
             try {
