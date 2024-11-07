@@ -85,7 +85,7 @@ public class SlotsCommand implements Command {
         double z = r.nextDouble(0,0.5);
         double l = x + y +
             BanditCommand.CharacteristicFunction(5,1000, player.getClicksSinceWinning()) * player.getClicksSinceWinning()*additionalWinProbability
-            +BanditCommand.CharacteristicFunction(7,1000,player.getClicksSinceJackpot())*player.getClicksSinceJackpot()*additionalWinProbability;
+            +BanditCommand.CharacteristicFunction(7,1000,player.getClicksSinceJackpot())*player.getClicksSinceJackpot()*additionalJackpotProbability;
         if (l<= 0.65){
             if(x <= 0.25) return SlotsWinType.ZERO;
             if(y <= 0.25) return SlotsWinType.QUARTER;
