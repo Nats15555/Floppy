@@ -13,13 +13,12 @@ import java.util.function.Consumer;
 public class StartCommand implements Command {
     public final static String name = "/start";
     public final static String description = "Запустить бота";
-    private final PlayerService playerService;
-
     private static final String msg = """
             Привет\\. Это казино\\-бот Floppy\\. Со мной ты сможешь сыграть в разные игры\\.
-            
+                        
             Напиши /help для вывода справки
             """;
+    private final PlayerService playerService;
 
     @Override
     public void execute(Long tgUserId,

@@ -1,4 +1,4 @@
 package com.vk.itmo.floppy.dto;
 
-public record GetSlotsResultResponse(Long userId, Long newBalance) {
+public record GetSlotsResultResponse(long balance, Integer[][] imageMatrix, Integer[][] winMatrix) {
 }

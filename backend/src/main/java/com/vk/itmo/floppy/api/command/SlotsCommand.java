@@ -3,17 +3,18 @@ package com.vk.itmo.floppy.api.command;
 import com.vk.itmo.floppy.model.Player;
 import com.vk.itmo.floppy.service.PlayerService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
-import java.util.Map;
+import java.util.Random;
 import java.util.function.Consumer;
 
 @Component(SlotsCommand.name)
 @RequiredArgsConstructor
-public class SlotsCommand implements GameCommand {
+public class SlotsCommand implements Command {
     public final static String name = "Слоты";
     public final static String description = "Начать играть в игру Слоты";
 
@@ -45,11 +46,32 @@ public class SlotsCommand implements GameCommand {
         return description;
     }
 
-    @Override
-    public Double calculateResult(Long tgUserId) {
+    public Pair<Integer[][], Integer[][]> calculateResult(Long tgUserId) {
         Player player = playerService.getUser(tgUserId);
+        Random random = new Random();
 
+        Integer[][] imageMatrix = new Integer[3][5];
+        Integer[][] winMatrix = new Integer[3][5];
 
-        return 0.0;
+        for (int i = 0; i < imageMatrix.length; i++) {
+            for (int j = 0; j < imageMatrix[i].length; j++) {
+                int resultIndex = random.nextInt(0, 5);
+                imageMatrix[i][j] = resultIndex;
+            }
+        }
+
+        for (int i = 0; i < winMatrix.length; i++) {
+            for (int j = 0; j < winMatrix[i].length; j++) {
+                if (random.nextBoolean()) {
+                    winMatrix[i][j] = 1;
+                } else {
+                    winMatrix[i][j] = 0;
+                }
+            }
+        }
+
+        // TODO handle winning
+
+        return Pair.of(imageMatrix, winMatrix);
     }
 }

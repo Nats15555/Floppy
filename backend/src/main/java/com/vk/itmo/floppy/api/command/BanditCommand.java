@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
-import java.util.Map;
+import java.util.Arrays;
+import java.util.Random;
 import java.util.function.Consumer;
 
 @Component(BanditCommand.name)
 @RequiredArgsConstructor
-public class BanditCommand implements GameCommand {
+public class BanditCommand implements Command {
     public final static String name = "Однорукий бандит";
     public final static String description = "Начать играть в игру Бандит";
 
@@ -45,11 +46,21 @@ public class BanditCommand implements GameCommand {
         return description;
     }
 
-    @Override
-    public Double calculateResult(Long tgUserId) {
+    public Integer[] calculateResult(Long tgUserId) {
         Player player = playerService.getUser(tgUserId);
+        Integer[] result = new Integer[3];
+        Random random = new Random();
 
+        for (int i = 0; i < result.length; i++) {
+            result[i] = random.nextInt(0, 6);
+        }
 
-        return 0.0;
+        if (Arrays.stream(result).distinct().count() == 1) {
+            long newBalance = player.getBalance() + 50;
+            playerService.addBalance(tgUserId, newBalance);
+
+        }
+
+        return result;
     }
 }

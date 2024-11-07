@@ -42,7 +42,13 @@ public class PlayerService {
     }
 
     public long getBalance(long tgUserId) {
-        return playerRepository.findPlayerBalanceByTgId(tgUserId);
+        return getUser(tgUserId).getBalance();
+    }
+
+    public void addBalance(long tgUserId, long balance) {
+        Player player = getUser(tgUserId);
+        player.setBalance(player.getBalance() + balance);
+        playerRepository.save(player);
     }
 
     public boolean giveaway(long tgUserId) {

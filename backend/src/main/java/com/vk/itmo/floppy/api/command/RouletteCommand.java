@@ -1,21 +1,65 @@
 package com.vk.itmo.floppy.api.command;
 
+import com.vk.itmo.floppy.dto.GetRouletteResultResponse;
+import com.vk.itmo.floppy.dto.GetRouletteResultStringRequest;
 import com.vk.itmo.floppy.model.Player;
 import com.vk.itmo.floppy.service.PlayerService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Consumer;
 
 @Component(RouletteCommand.name)
 @RequiredArgsConstructor
-public class RouletteCommand implements GameCommand {
+public class RouletteCommand implements Command {
     public final static String name = "Рулетка";
     public final static String description = "Начать играть в игру Рулетка";
+
+    private final static Map<Integer, GetRouletteResultResponse.Color> NUMBER_COLOR_MAP = Map.ofEntries(
+            Map.entry(0, GetRouletteResultResponse.Color.GREEN),
+            Map.entry(1, GetRouletteResultResponse.Color.RED),
+            Map.entry(2, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(3, GetRouletteResultResponse.Color.RED),
+            Map.entry(4, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(5, GetRouletteResultResponse.Color.RED),
+            Map.entry(6, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(7, GetRouletteResultResponse.Color.RED),
+            Map.entry(8, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(9, GetRouletteResultResponse.Color.RED),
+            Map.entry(10, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(11, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(12, GetRouletteResultResponse.Color.RED),
+            Map.entry(13, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(14, GetRouletteResultResponse.Color.RED),
+            Map.entry(15, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(16, GetRouletteResultResponse.Color.RED),
+            Map.entry(17, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(18, GetRouletteResultResponse.Color.RED),
+            Map.entry(19, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(20, GetRouletteResultResponse.Color.RED),
+            Map.entry(21, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(22, GetRouletteResultResponse.Color.RED),
+            Map.entry(23, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(24, GetRouletteResultResponse.Color.RED),
+            Map.entry(25, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(26, GetRouletteResultResponse.Color.RED),
+            Map.entry(27, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(28, GetRouletteResultResponse.Color.RED),
+            Map.entry(29, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(30, GetRouletteResultResponse.Color.RED),
+            Map.entry(31, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(32, GetRouletteResultResponse.Color.RED),
+            Map.entry(33, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(34, GetRouletteResultResponse.Color.RED),
+            Map.entry(35, GetRouletteResultResponse.Color.BLACK),
+            Map.entry(36, GetRouletteResultResponse.Color.RED)
+    );
 
     private final PlayerService playerService;
 
@@ -45,11 +89,60 @@ public class RouletteCommand implements GameCommand {
         return description;
     }
 
-    @Override
-    public Double calculateResult(Long tgUserId) {
+    public Pair<Integer, GetRouletteResultResponse.Color> calculateResult(Long tgUserId, GetRouletteResultStringRequest.Bet bet) {
         Player player = playerService.getUser(tgUserId);
+        Random random = new Random();
 
+        int resultNumber = random.nextInt(0, NUMBER_COLOR_MAP.size());
+        GetRouletteResultResponse.Color resultColor = NUMBER_COLOR_MAP.get(resultNumber);
 
-        return 0.0;
+        switch (bet) {
+            case BLACK -> {
+                if (resultColor.equals(GetRouletteResultResponse.Color.BLACK)) {
+                    addBalance(player, 2);
+                }
+            }
+            case RED -> {
+                if (resultColor.equals(GetRouletteResultResponse.Color.RED)) {
+                    addBalance(player, 2);
+                }
+            }
+            case ODD -> {
+                if (resultNumber % 2 != 0) {
+                    addBalance(player, 10);
+                }
+            }
+            case EVEN -> {
+                if (resultNumber % 2 == 0) {
+                    addBalance(player, 10);
+                }
+            }
+            case ZERO -> {
+                if (resultNumber == 0) {
+                    addBalance(player, 100);
+                }
+            }
+        }
+
+        return Pair.of(resultNumber, resultColor);
+    }
+
+    public Pair<Integer, GetRouletteResultResponse.Color> calculateResult(Long tgUserId, int bet) {
+        Player player = playerService.getUser(tgUserId);
+        Random random = new Random();
+
+        int resultNumber = random.nextInt(0, NUMBER_COLOR_MAP.size());
+        GetRouletteResultResponse.Color resultColor = NUMBER_COLOR_MAP.get(resultNumber);
+
+        if (resultNumber == bet) {
+            addBalance(player, 100);
+        }
+
+        return Pair.of(resultNumber, resultColor);
+    }
+
+    private void addBalance(Player player, int multiplier) {
+        long newBalance = player.getBalance() * multiplier;
+        playerService.addBalance(player.getTgId(), newBalance);
     }
 }
