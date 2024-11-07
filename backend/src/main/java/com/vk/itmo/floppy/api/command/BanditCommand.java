@@ -22,7 +22,6 @@ public class BanditCommand implements Command {
     private final double playerJackpotProbability = 0.01;
 
 
-
     private final PlayerService playerService;
 
     @Value("${floppy.bot.games.bandit.url}")
@@ -54,57 +53,64 @@ public class BanditCommand implements Command {
     public Integer[] calculateResult(Long tgUserId, long betAmount) {
         Player player = playerService.getUser(tgUserId);
         Integer[] result = new Integer[3];
+
         BanditExceedType exceed = calculate(player);
-        int bet =50;
-        switch (exceed){
+
+        switch (exceed) {
             case JACKPOT:
-                result[0]=result[1]=result[2]=7;
-                playerService.setBalance(tgUserId, player.getBalance()+bet*2);
+                result[0] = result[1] = result[2] = 7;
+                playerService.setBalance(tgUserId, player.getBalance() + betAmount * 2);
                 break;
             case WIN:
                 Random r = new Random();
-                result[0]=result[1]=result[2]=r.nextInt(0,6);
-                playerService.setBalance(tgUserId, player.getBalance()+bet);
+                result[0] = result[1] = result[2] = r.nextInt(0, 6);
+                playerService.setBalance(tgUserId, player.getBalance() + betAmount);
                 break;
             case LOSE:
                 Random r1 = new Random();
-                result[0] = r1.nextInt(0,6);
-                result[1] = r1.nextInt(0,6);
-                result[2] = r1.nextInt(0,6);
-                playerService.setBalance(tgUserId, player.getBalance()-bet);
+                result[0] = r1.nextInt(0, 6);
+                result[1] = r1.nextInt(0, 6);
+                result[2] = r1.nextInt(0, 6);
+                playerService.setBalance(tgUserId, player.getBalance() - betAmount);
                 break;
         }
 
         return result;
     }
 
-    private BanditExceedType calculate(Player player){
+    private BanditExceedType calculate(Player player) {
         var winAttempt = player.getClicksSinceWinning();
         var jackpotAttempt = player.getClicksSinceJackpot();
         Random random = new Random();
-        double x = random.nextDouble(0,1);
-        double y = random.nextDouble(0,0.5);
+
+        double x = random.nextDouble(0, 1);
+        double y = random.nextDouble(0, 0.5);
+
         int win = CharacteristicFunction(playerWinProbability, 1.0,
-            (x+CharacteristicFunction(4,100, winAttempt)*winAttempt*additionalWinProbability));
+                (x + CharacteristicFunction(4, 100, winAttempt) * winAttempt * additionalWinProbability));
+
         int jackpot = CharacteristicFunction(-100.0, playerJackpotProbability,
-            (y-CharacteristicFunction(10,1000,jackpotAttempt)*jackpotAttempt*additionalJackpotProbability));
-        if (jackpot == 1){
+                (y - CharacteristicFunction(10, 1000, jackpotAttempt) * jackpotAttempt * additionalJackpotProbability));
+
+        if (jackpot == 1) {
             return BanditExceedType.JACKPOT;
         }
-        if (win == 1){
+
+        if (win == 1) {
             return BanditExceedType.WIN;
         }
+
         return BanditExceedType.LOSE;
     }
 
-    public static int CharacteristicFunction(double lower_bound ,double upper_bound, double value){
-        if(lower_bound <= value && value <= upper_bound){
+    public static int CharacteristicFunction(double lower_bound, double upper_bound, double value) {
+        if (lower_bound <= value && value <= upper_bound) {
             return 1;
         }
         return 0;
     }
 
-    public enum BanditExceedType{
+    public enum BanditExceedType {
         LOSE, WIN, JACKPOT;
     }
 }
