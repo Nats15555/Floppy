@@ -97,7 +97,7 @@ public class SlotsCommand implements Command {
                 return SlotsWinType.QUARTER;
             }
             if (x + y <= 0.5) {
-                return SlotsWinType.THREEHALFS;
+                return SlotsWinType.THREE_HALVES;
             }
 
             return SlotsWinType.BET;
@@ -105,27 +105,27 @@ public class SlotsCommand implements Command {
 
         if (l <= 0.9) {
             if (z <= 0.5) {
-                return SlotsWinType.BETANDHALF;
+                return SlotsWinType.BET_AND_HALF;
             }
 
-            return SlotsWinType.TWOBET;
+            return SlotsWinType.TWO_BET;
         }
 
         if (l <= 0.98) {
-            return SlotsWinType.TENBET;
+            return SlotsWinType.TEN_BET;
         }
 
-        return SlotsWinType.HUNDREDBET;
+        return SlotsWinType.HUNDRED_BET;
     }
 
     public enum SlotsWinType {
         ZERO,
         QUARTER,
-        THREEHALFS,
+        THREE_HALVES,
         BET,
-        BETANDHALF,
-        TWOBET,
-        TENBET,
-        HUNDREDBET
+        BET_AND_HALF,
+        TWO_BET,
+        TEN_BET,
+        HUNDRED_BET
     }
 }
