@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 @Component(GetMoneyCommand.name)
 @RequiredArgsConstructor
-public class GetMoneyCommand extends Command {
+public class GetMoneyCommand implements Command {
     public final static String name = "Получить монеты";
     public final static String description = "Получить бесплатные монеты";
 

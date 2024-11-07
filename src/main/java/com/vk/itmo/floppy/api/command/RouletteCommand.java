@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import java.util.function.Consumer;
 
 @Component(RouletteCommand.name)
-public class RouletteCommand extends Command {
+public class RouletteCommand implements Command {
     public final static String name = "Рулетка";
     public final static String description = "Начать играть в игру Рулетка";
 

@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 
 import java.util.function.Consumer;
 
-public class WrongCommand extends Command {
+public class WrongCommand implements Command {
     public final static String name = StringUtils.EMPTY;
     public final static String description = StringUtils.EMPTY;
 

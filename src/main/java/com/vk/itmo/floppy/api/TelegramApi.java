@@ -1,7 +1,6 @@
 package com.vk.itmo.floppy.api;
 
 import com.vk.itmo.floppy.api.command.*;
-import com.vk.itmo.floppy.service.PlayerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -27,15 +26,13 @@ import java.util.Map;
 @Component
 public class TelegramApi implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
-    private final PlayerService playerService;
     private final String token;
     private final ReplyKeyboardMarkup menuKeyBoard;
     private final Map<String, Command> commandMap;
 
-    public TelegramApi(@Value("${floppy.bot.token.telegram}") String token, PlayerService playerService, Map<String, Command> commandMap) {
+    public TelegramApi(@Value("${floppy.bot.token.telegram}") String token, Map<String, Command> commandMap) {
         this.token = token;
         this.telegramClient = new OkHttpTelegramClient(token);
-        this.playerService = playerService;
         this.menuKeyBoard = initMenuKeyboard();
         this.commandMap = commandMap;
     }

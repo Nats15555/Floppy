@@ -10,14 +10,17 @@ import org.telegram.telegrambots.meta.api.objects.webapp.WebAppInfo;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class Command {
+public interface Command {
+    void execute(Long userId,
+                 SendMessage.SendMessageBuilder sendMessageBuilder,
+                 ReplyKeyboardMarkup keyboardMarkup,
+                 Consumer<SendMessage> sendMessage);
 
-    public abstract void execute(Long userId,
-                                 SendMessage.SendMessageBuilder sendMessageBuilder,
-                                 ReplyKeyboardMarkup keyboardMarkup,
-                                 Consumer<SendMessage> sendMessage);
+    String getName();
 
-    protected InlineKeyboardMarkup getPlayGameButton(String gameUrl) {
+    String getDescription();
+
+    default InlineKeyboardMarkup getPlayGameButton(String gameUrl) {
         return new InlineKeyboardMarkup(List.of(new InlineKeyboardRow(
                 InlineKeyboardButton.builder()
                         .text("Играть")
@@ -25,9 +28,4 @@ public abstract class Command {
                         .build()))
         );
     }
-
-    public abstract String getName();
-
-    public abstract String getDescription();
-
 }

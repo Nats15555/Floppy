@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 @Component(ProfileCommand.name)
 @RequiredArgsConstructor
-public class ProfileCommand extends Command {
+public class ProfileCommand implements Command {
     public final static String name = "Профиль";
     public final static String description = "Посмотреть профиль";
 

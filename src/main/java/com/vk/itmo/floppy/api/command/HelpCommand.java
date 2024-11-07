@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Component(HelpCommand.name)
 @RequiredArgsConstructor
-public class HelpCommand extends Command {
+public class HelpCommand implements Command {
     public final static String name = "/help";
     public final static String description = "Получить список доступных команд";
     private final List<Command> commands;

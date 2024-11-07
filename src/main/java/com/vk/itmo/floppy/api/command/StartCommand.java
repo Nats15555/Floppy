@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 @Component(StartCommand.name)
 @RequiredArgsConstructor
-public class StartCommand extends Command {
+public class StartCommand implements Command {
     public final static String name = "/start";
     public final static String description = "Запустить бота";
     private final PlayerService playerService;

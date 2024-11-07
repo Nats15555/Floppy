@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import java.util.function.Consumer;
 
 @Component(BanditCommand.name)
-public class BanditCommand extends Command {
+public class BanditCommand implements Command {
     public final static String name = "Бандит";
     public final static String description = "Начать играть в игру Бандит";
 
