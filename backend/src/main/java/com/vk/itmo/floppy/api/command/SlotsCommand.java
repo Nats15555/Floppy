@@ -17,7 +17,8 @@ import java.util.function.Consumer;
 public class SlotsCommand implements Command {
     public final static String name = "Слоты";
     public final static String description = "Начать играть в игру Слоты";
-
+    private final double additionalWinProbability = 0.01;
+    private final double additionalJackpotProbability = 0.01;
     private final PlayerService playerService;
 
     @Value("${floppy.bot.games.slots.url}")
@@ -50,6 +51,8 @@ public class SlotsCommand implements Command {
         Player player = playerService.getUser(tgUserId);
         Random random = new Random();
 
+        SlotsWinType winType = calculateWin(player);
+
         Integer[][] imageMatrix = new Integer[3][5];
         Integer[][] winMatrix = new Integer[3][5];
 
@@ -73,5 +76,38 @@ public class SlotsCommand implements Command {
         // TODO handle winning
 
         return Pair.of(imageMatrix, winMatrix);
+    }
+
+    private SlotsWinType calculateWin(Player player){
+        Random r = new Random();
+        double x = r.nextDouble(0,0.5);
+        double y = r.nextDouble(0,0.45);
+        double z = r.nextDouble(0,0.5);
+        double l = x + y +
+            BanditCommand.CharacteristicFunction(5,1000, player.getClicksSinceWinning()) * player.getClicksSinceWinning()*additionalWinProbability
+            +BanditCommand.CharacteristicFunction(7,1000,player.getClicksSinceJackpot())*player.getClicksSinceJackpot()*additionalJackpotProbability;
+        if (l<= 0.65){
+            if(x <= 0.25) return SlotsWinType.ZERO;
+            if(y <= 0.25) return SlotsWinType.QUARTER;
+            if(x + y <=0.5) return SlotsWinType.THREEHALFS;
+            return SlotsWinType.BET;
+        }
+        if( l <=0.9){
+            if (z <= 0.5) return SlotsWinType.BETANDHALF;
+            return SlotsWinType.TWOBET;
+        }
+        if (l <= 0.98) return SlotsWinType.TENBET;
+        return SlotsWinType.HUNDREDBET;
+    }
+
+    public enum SlotsWinType{
+        ZERO,
+        QUARTER,
+        THREEHALFS,
+        BET,
+        BETANDHALF,
+        TWOBET,
+        TENBET,
+        HUNDREDBET
     }
 }
