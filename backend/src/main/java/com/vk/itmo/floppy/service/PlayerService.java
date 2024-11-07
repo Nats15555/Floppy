@@ -41,6 +41,10 @@ public class PlayerService {
                 .orElseThrow();
     }
 
+    public long getBalance(long tgUserId) {
+        return playerRepository.findPlayerBalanceByTgId(tgUserId);
+    }
+
     public boolean giveaway(long tgUserId) {
         var player = getUser(tgUserId);
         var lastGiveawayTime = player.getLastGiveaway();

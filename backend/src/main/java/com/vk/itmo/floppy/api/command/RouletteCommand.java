@@ -11,15 +11,15 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import java.util.Map;
 import java.util.function.Consumer;
 
-@Component(BanditCommand.name)
+@Component(RouletteCommand.name)
 @RequiredArgsConstructor
-public class BanditCommand implements GameCommand {
-    public final static String name = "Однорукий бандит";
-    public final static String description = "Начать играть в игру Бандит";
+public class RouletteCommand implements GameCommand {
+    public final static String name = "Рулетка";
+    public final static String description = "Начать играть в игру Рулетка";
 
     private final PlayerService playerService;
 
-    @Value("${floppy.bot.games.bandit.url}")
+    @Value("${floppy.bot.games.roulette.url}")
     private String url;
 
     @Override
@@ -27,9 +27,9 @@ public class BanditCommand implements GameCommand {
                         SendMessage.SendMessageBuilder sendMessageBuilder,
                         ReplyKeyboardMarkup keyboardMarkup,
                         Consumer<SendMessage> sendMessage) {
-        var playButton = getPlayGameButton(url);
+        var playButton = getPlayGameButton(url + "/" + tgUserId + "/" + playerService.getBalance(tgUserId));
         var message = sendMessageBuilder
-                .text("Игра Однорукий Бандит")
+                .text("Игра Рулетка")
                 .replyMarkup(playButton)
                 .build();
         sendMessage.accept(message);

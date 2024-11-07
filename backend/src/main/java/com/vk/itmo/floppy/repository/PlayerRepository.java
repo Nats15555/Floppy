@@ -10,4 +10,6 @@ public interface PlayerRepository extends JpaRepository<Player, UUID> {
     boolean existsByTgId(long tgId);
 
     Optional<Player> findByTgId(long tgId);
+
+    long findPlayerBalanceByTgId(long tgId);
 }
