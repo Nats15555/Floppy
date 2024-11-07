@@ -18,3 +18,10 @@ floppy:
   bot:
     token:
       telegram: ${FLOPPY_BOT_TOKEN_TG}
+    games:
+      bandit:
+        url: ${FLOPPY_BOT_BANDIT_URL:"https://example.com/"}
+      slots:
+        url: ${FLOPPY_BOT_SLOTS_URL:"https://example.com/"}
+      roulette:
+        url: ${FLOPPY_BOT_ROULETTE_URL:"https://example.com/"}
