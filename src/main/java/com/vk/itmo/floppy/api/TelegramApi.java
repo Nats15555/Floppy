@@ -1,5 +1,6 @@
 package com.vk.itmo.floppy.api;
 
+import com.vk.itmo.floppy.api.commands.*;
 import com.vk.itmo.floppy.service.PlayerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,9 +12,16 @@ import org.telegram.telegrambots.longpolling.starter.AfterBotRegistration;
 import org.telegram.telegrambots.longpolling.starter.SpringLongPollingBot;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage.SendMessageBuilder;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -21,11 +29,23 @@ public class TelegramApi implements SpringLongPollingBot, LongPollingSingleThrea
     private final TelegramClient telegramClient;
     private final PlayerService playerService;
     private final String token;
+    private final ReplyKeyboardMarkup menuKeyBoard;
+    private final Map<String, Command> commandMap;
 
-    public TelegramApi(@Value("${floppy.bot.token.telegram}") String token, PlayerService playerService) {
+    public TelegramApi(@Value("${floppy.bot.token.telegram}") String token, PlayerService playerService, Map<String, Command> commandMap) {
         this.token = token;
         this.telegramClient = new OkHttpTelegramClient(token);
         this.playerService = playerService;
+        this.menuKeyBoard = initMenuKeyboard();
+        this.commandMap = commandMap;
+    }
+
+    private ReplyKeyboardMarkup initMenuKeyboard() {
+        return new ReplyKeyboardMarkup(List.of(
+                new KeyboardRow(new KeyboardButton(BanditCommand.name), new KeyboardButton(SlotsCommand.name)),
+                new KeyboardRow(new KeyboardButton(RouletteCommand.name)),
+                new KeyboardRow(new KeyboardButton(ProfileCommand.name), new KeyboardButton(GetMoneyCommand.name))
+        ));
     }
 
     @Override
@@ -41,25 +61,24 @@ public class TelegramApi implements SpringLongPollingBot, LongPollingSingleThrea
     @Override
     public void consume(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String messageText = update.getMessage().getText();
+            var userInput = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
             long userId = update.getMessage().getFrom().getId();
 
-            if (!playerService.isUserExists(userId)) {
-                playerService.addUser(userId);
-            }
+            processCommand(userInput, chatId, userId);
+        }
+    }
 
-            SendMessage message = SendMessage
-                    .builder()
-                    .chatId(chatId)
-                    .text(messageText)
-                    .build();
+    private void processCommand(String userInput, Long chatId, Long userId) {
+        commandMap.getOrDefault(userInput, new WrongCommand())
+                .execute(userId, sendMessageBuilder(chatId), menuKeyBoard, this::sendMessage);
+    }
 
-            try {
-                telegramClient.execute(message);
-            } catch (TelegramApiException e) {
-                log.error("Failed to consume", e);
-            }
+    private void sendMessage(SendMessage message) {
+        try {
+            telegramClient.execute(message);
+        } catch (TelegramApiException e) {
+            log.error("Failed to consume", e);
         }
     }
 
@@ -67,4 +86,11 @@ public class TelegramApi implements SpringLongPollingBot, LongPollingSingleThrea
     public void afterRegistration(BotSession botSession) {
         log.info("Registered bot running state is: {}", botSession.isRunning());
     }
+
+    private SendMessageBuilder sendMessageBuilder(Long chatId) {
+        return SendMessage.builder()
+                .parseMode("MARKDOWNV2")
+                .chatId(chatId);
+    }
+
 }
