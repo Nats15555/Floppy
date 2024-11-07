@@ -23,6 +23,14 @@ public class BanditCommand implements Command {
     @Value("${floppy.bot.games.bandit.url}")
     private String url;
 
+    public static int CharacteristicFunction(double lower_bound, double upper_bound, double value) {
+        if (lower_bound <= value && value <= upper_bound) {
+            return 1;
+        }
+
+        return 0;
+    }
+
     @Override
     public void execute(Long tgUserId,
                         SendMessage.SendMessageBuilder sendMessageBuilder,
@@ -105,15 +113,7 @@ public class BanditCommand implements Command {
         return BanditExceedType.LOSE;
     }
 
-    public static int CharacteristicFunction(double lower_bound, double upper_bound, double value) {
-        if (lower_bound <= value && value <= upper_bound) {
-            return 1;
-        }
-
-        return 0;
-    }
-
     public enum BanditExceedType {
-        LOSE, WIN, JACKPOT;
+        LOSE, WIN, JACKPOT
     }
 }
