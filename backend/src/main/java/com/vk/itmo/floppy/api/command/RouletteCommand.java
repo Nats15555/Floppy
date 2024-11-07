@@ -89,7 +89,7 @@ public class RouletteCommand implements Command {
         return description;
     }
 
-    public Pair<Integer, GetRouletteResultResponse.Color> calculateResult(Long tgUserId, GetRouletteResultStringRequest.Bet bet) {
+    public Pair<Integer, GetRouletteResultResponse.Color> calculateResult(Long tgUserId, GetRouletteResultStringRequest.Bet bet, long betAmount) {
         Player player = playerService.getUser(tgUserId);
         Random random = new Random();
 
@@ -99,27 +99,37 @@ public class RouletteCommand implements Command {
         switch (bet) {
             case BLACK -> {
                 if (resultColor.equals(GetRouletteResultResponse.Color.BLACK)) {
-                    addBalance(player, 2);
+                    addBalance(player, 2, betAmount);
+                } else {
+                    subtractBalance(player, betAmount);
                 }
             }
             case RED -> {
                 if (resultColor.equals(GetRouletteResultResponse.Color.RED)) {
-                    addBalance(player, 2);
+                    addBalance(player, 2, betAmount);
+                } else {
+                    subtractBalance(player, betAmount);
                 }
             }
             case ODD -> {
                 if (resultNumber % 2 != 0) {
-                    addBalance(player, 10);
+                    addBalance(player, 10, betAmount);
+                } else {
+                    subtractBalance(player, betAmount);
                 }
             }
             case EVEN -> {
                 if (resultNumber % 2 == 0) {
-                    addBalance(player, 10);
+                    addBalance(player, 10, betAmount);
+                } else {
+                    subtractBalance(player, betAmount);
                 }
             }
             case ZERO -> {
                 if (resultNumber == 0) {
-                    addBalance(player, 100);
+                    addBalance(player, 100, betAmount);
+                } else {
+                    subtractBalance(player, betAmount);
                 }
             }
         }
@@ -127,7 +137,7 @@ public class RouletteCommand implements Command {
         return Pair.of(resultNumber, resultColor);
     }
 
-    public Pair<Integer, GetRouletteResultResponse.Color> calculateResult(Long tgUserId, int bet) {
+    public Pair<Integer, GetRouletteResultResponse.Color> calculateResult(Long tgUserId, int bet, long betAmount) {
         Player player = playerService.getUser(tgUserId);
         Random random = new Random();
 
@@ -135,14 +145,21 @@ public class RouletteCommand implements Command {
         GetRouletteResultResponse.Color resultColor = NUMBER_COLOR_MAP.get(resultNumber);
 
         if (resultNumber == bet) {
-            addBalance(player, 100);
+            addBalance(player, 100, betAmount);
+        } else {
+            subtractBalance(player, betAmount);
         }
 
         return Pair.of(resultNumber, resultColor);
     }
 
-    private void addBalance(Player player, int multiplier) {
-        long newBalance = player.getBalance() * multiplier;
-        playerService.addBalance(player.getTgId(), newBalance);
+    private void addBalance(Player player, int multiplier, long betAmount) {
+        long newBalance = player.getBalance() + multiplier * betAmount;
+        playerService.setBalance(player.getTgId(), newBalance);
+    }
+
+    private void subtractBalance(Player player, long betAmount) {
+        long newBalance = player.getBalance() - betAmount;
+        playerService.setBalance(player.getTgId(), newBalance);
     }
 }

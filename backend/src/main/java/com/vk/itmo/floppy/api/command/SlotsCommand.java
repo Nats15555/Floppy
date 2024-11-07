@@ -46,7 +46,7 @@ public class SlotsCommand implements Command {
         return description;
     }
 
-    public Pair<Integer[][], Integer[][]> calculateResult(Long tgUserId) {
+    public Pair<Integer[][], Integer[][]> calculateResult(Long tgUserId, long betAmount) {
         Player player = playerService.getUser(tgUserId);
         Random random = new Random();
 

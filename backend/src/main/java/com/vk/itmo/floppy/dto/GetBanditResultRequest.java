@@ -1,4 +1,4 @@
 package com.vk.itmo.floppy.dto;
 
-public record GetBanditResultRequest(long tgUserId) {
+public record GetBanditResultRequest(long tgUserId, long betAmount) {
 }

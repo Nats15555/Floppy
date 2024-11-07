@@ -46,7 +46,7 @@ public class BanditCommand implements Command {
         return description;
     }
 
-    public Integer[] calculateResult(Long tgUserId) {
+    public Integer[] calculateResult(Long tgUserId, long betAmount) {
         Player player = playerService.getUser(tgUserId);
         Integer[] result = new Integer[3];
         Random random = new Random();
@@ -56,9 +56,11 @@ public class BanditCommand implements Command {
         }
 
         if (Arrays.stream(result).distinct().count() == 1) {
-            long newBalance = player.getBalance() + 50;
-            playerService.addBalance(tgUserId, newBalance);
-
+            long newBalance = player.getBalance() + betAmount;
+            playerService.setBalance(tgUserId, newBalance);
+        } else {
+            long newBalance = player.getBalance() - betAmount;
+            playerService.setBalance(tgUserId, newBalance);
         }
 
         return result;

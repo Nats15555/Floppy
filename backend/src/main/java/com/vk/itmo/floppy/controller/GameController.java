@@ -24,7 +24,7 @@ public class GameController {
 
     @PostMapping("/bandit")
     public GetBanditResultResponse getBanditResult(@RequestBody GetBanditResultRequest request) {
-        Integer[] result = banditCommand.calculateResult(request.tgUserId());
+        Integer[] result = banditCommand.calculateResult(request.tgUserId(), request.betAmount());
         long balance = playerService.getBalance(request.tgUserId());
 
         return new GetBanditResultResponse(balance, result);
@@ -32,7 +32,7 @@ public class GameController {
 
     @PostMapping("/roulette/string")
     public GetRouletteResultResponse getRouletteResult(@RequestBody GetRouletteResultStringRequest request) {
-        Pair<Integer, GetRouletteResultResponse.Color> result = rouletteCommand.calculateResult(request.tgUserId(), request.bet());
+        Pair<Integer, GetRouletteResultResponse.Color> result = rouletteCommand.calculateResult(request.tgUserId(), request.bet(), request.betAmount());
         long balance = playerService.getBalance(request.tgUserId());
 
         return new GetRouletteResultResponse(balance, result.getLeft(), result.getRight());
@@ -40,7 +40,7 @@ public class GameController {
 
     @PostMapping("/roulette/number")
     public GetRouletteResultResponse getRouletteResult(@RequestBody GetRouletteResultNumberRequest request) {
-        Pair<Integer, GetRouletteResultResponse.Color> result = rouletteCommand.calculateResult(request.tgUserId(), request.bet());
+        Pair<Integer, GetRouletteResultResponse.Color> result = rouletteCommand.calculateResult(request.tgUserId(), request.betNumber(), request.betAmount());
         long balance = playerService.getBalance(request.tgUserId());
 
         return new GetRouletteResultResponse(balance, result.getLeft(), result.getRight());
@@ -48,7 +48,7 @@ public class GameController {
 
     @PostMapping("/slots")
     public GetSlotsResultResponse getSlotsResult(@RequestBody GetSlotsResultRequest request) {
-        Pair<Integer[][], Integer[][]> result = slotsCommand.calculateResult(request.tgUserId());
+        Pair<Integer[][], Integer[][]> result = slotsCommand.calculateResult(request.tgUserId(), request.betAmount());
         long balance = playerService.getBalance(request.tgUserId());
 
         return new GetSlotsResultResponse(balance, result.getLeft(), result.getRight());

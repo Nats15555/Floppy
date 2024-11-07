@@ -45,9 +45,9 @@ public class PlayerService {
         return getUser(tgUserId).getBalance();
     }
 
-    public void addBalance(long tgUserId, long balance) {
+    public void setBalance(long tgUserId, long balance) {
         Player player = getUser(tgUserId);
-        player.setBalance(player.getBalance() + balance);
+        player.setBalance(balance);
         playerRepository.save(player);
     }
 
