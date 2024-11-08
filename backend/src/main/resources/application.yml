@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: floppy
+  datasource:
+    url: jdbc:h2:file:./floppy.db
+    driverClassName: org.h2.Driver
+    username: root
+    password: root
+    jpa:
+      hibernate:
+        ddl-auto: none
+      show-sql: true
+      properties:
+        hibernate:
+          format_sql: true
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true
+
+floppy:
+  bot:
+    token:
+      telegram: ${FLOPPY_BOT_TOKEN_TG}
+    games:
+      bandit:
+        url: ${FLOPPY_BOT_BANDIT_URL:"https://example.com"}
+      slots:
+        url: ${FLOPPY_BOT_SLOTS_URL:"https://example.com"}
+      roulette:
+        url: ${FLOPPY_BOT_ROULETTE_URL:"https://example.com"}
