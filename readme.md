@@ -26,3 +26,6 @@ _Для корректной работы необходим токен бота
 1. `cd frontend`
 2. `npm i`
 3. `npm run dev` (для локальной проверки. Для полноценной работы необходим деплой на сервер с TLS)
+
+### Презентация 
+Презентация доступна по этой [ссылке](https://docs.google.com/presentation/d/1vHoEgUcpXFfioddxeZxIH_9Pyr358B5j/edit#slide=id.p1).
