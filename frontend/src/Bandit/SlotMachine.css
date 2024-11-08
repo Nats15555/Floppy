@@ -1,0 +1,153 @@
+html, body{
+    background-color: whitesmoke;
+}
+
+.slot-machine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.slots {
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    width: 430px;
+    height: 640px;
+    margin-bottom: 20px;
+    background-image: url('/src/assets/jk.png');
+    background-position: center;
+    background-color: red;
+}
+
+.slot {
+    width: 100px;
+    height: 97px;
+    overflow: hidden;
+    /*border: 2px solid #000;*/
+    position: absolute;
+}
+
+.slot:nth-child(1) {
+    left: 35px;
+    top: 341px;
+}
+
+.slot:nth-child(2) {
+    left: 169px;
+    top: 341px;
+}
+
+.slot:nth-child(3) {
+    left: 303px;
+    top: 341px;
+}
+
+.slot-item {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+@keyframes tilt-n-move-shaking {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(5px, 5px) rotate(5deg); }
+    50% { transform: translate(0, 0) rotate(0deg); }
+    75% { transform: translate(-5px, 5px) rotate(-5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 0); }
+    25% { transform: translate(-1px, 0); }
+    50% { transform: translate(1px, 0); }
+    75% { transform: translate(-1px, 0); }
+    100% { transform: translate(0, 0); }
+}
+
+.bg-div{
+    background-color: #8e44ad;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+}
+
+.spin-div{
+    top: -179px;
+    left: 8px;
+    width: 228px;
+    height: 60px;
+}
+
+.spin-button {
+    background-color: #732d91;
+    color: white;
+    border: yellow;
+    border-radius: 100px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+
+}
+
+.spin-button:hover {
+    background-color: #732d91;
+    transform: scale(1.05);
+}
+
+.spin-button.spinning {
+    animation: spin 1s infinite;
+}
+
+@keyframes spin {
+    0% { transform: scale(1); }
+    50% {transform: scale(1.5); }
+    100% { transform: scale(1); }
+}
+
+.balance-div{
+    top: -150px;
+    left: -54px;
+    height: 40px;
+    width: 98px;
+    border-radius: 7px;
+}
+
+.balance {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    margin: 0 10px;
+    transition: transform 0.5s, color 0.5s;
+}
+
+.balance.increase {
+    color: #27ae60;
+    transform: scale(1.5);
+}
+
+.balance.decrease {
+    color: #e74c3c;
+    transform: scale(0.6);
+}
+
+.bet-div{
+    height: 40px;
+    width: 98px;
+
+    top: -190px;
+    left: 68px;
+    border-radius: 7px;
+}

@@ -1,0 +1,70 @@
+.bet-board {
+    text-align: center;
+    margin: 20px;
+}
+
+.bet-options {
+    margin-bottom: 20px;
+}
+
+html, body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-options, .odd-even-options {
+    margin: 10px 0;
+}
+
+.bet-button {
+    padding: 15px 20px;
+    font-size: 16px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.red {
+    background-color: red;
+    color: white;
+}
+
+.black {
+    background-color: black;
+    color: white;
+}
+
+.zero {
+    background-color: green;
+    color: white;
+}
+
+.even {
+    background-color: yellow;
+    color: black;
+}
+
+.odd {
+    background-color: yellowgreen;
+    color: black;
+}
+
+.number-board {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    max-width: 400px;
+    gap: 2px;
+    margin-top: 20px;
+}
+
+.number-board .bet-button {
+    background-color: #ccc;
+    color: black;
+}
+
+.selected {
+    border: yellow 4px solid;
+    border-radius: 4px;
+}

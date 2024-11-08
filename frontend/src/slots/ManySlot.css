@@ -1,0 +1,131 @@
+.many-slot-machine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.many-slots {
+    overflow: hidden;
+    display: flex;
+    height: 640px;
+    position: relative;
+    background-image: url('../assets/23.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.many-slot {
+    width: 100px;
+    height: 215px;
+    overflow: hidden;
+    margin: 0 5px;
+    position: relative;
+    top: 125px;
+}
+
+.many-slot-item {
+    height: 43px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+@keyframes tilt-n-move-shaking {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(5px, 5px) rotate(5deg);
+    }
+    50% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    75% {
+        transform: translate(-5px, 5px) rotate(-5deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+@keyframes shake {
+    0% {
+        transform: translate(1px, 0);
+    }
+    25% {
+        transform: translate(-1px, 0);
+    }
+    50% {
+        transform: translate(1px, 0);
+    }
+    75% {
+        transform: translate(-1px, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+.fruit-name {
+    position: absolute;
+    width: 320px;
+    height: 100px;
+    top: 15px;
+}
+
+
+.many-shaking {
+    animation: tilt-n-move-shaking 0.5s linear infinite;
+}
+
+.many-lose {
+    opacity: 0.5;
+}
+
+.many-balance {
+    position: relative;
+    top: -259px;
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    transition: transform 0.5s, color 0.5s;
+}
+
+.many-balance.increase {
+    color: #27ae60;
+    transform: scale(1.5);
+}
+
+.many-balance.decrease {
+    color: #e74c3c;
+    transform: scale(0.6);
+}
+
+.many-bet {
+    position: relative;
+    top: -259px;
+}
+
+.many-spin {
+    position: relative;
+    top: -60px;
+}
+
+@keyframes many-scale {
+    0% { transform: scale(1); }
+    50% {transform: scale(1.5); }
+    100% { transform: scale(1); }
+}
+
+.many-spin-anim{
+    animation: 0,5s many-scale ease-in-out infinite;
+}
